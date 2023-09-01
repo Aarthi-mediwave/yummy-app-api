@@ -29,9 +29,6 @@ if(!recipe){
     res.send(recipe)
 })
 
-app.put('/',(req,res) =>{
-    res.send("PUT request")
-})
 
 //adding a receipe
 app.post('/recipes',(req,res) =>{
@@ -55,6 +52,24 @@ if(index == -1){
 const deleteRecipe = recipes[index];
 recipes.splice(index, 1);
     res.send(deleteRecipe);
+})
+
+//update a recipe
+app.put('/recipes/:id',(req,res) =>{
+    const payload = req.body;
+    // req is ok?
+    if(!payload.name) {
+        return res.status(400).send({message:"Receipe should have a name"});
+    }
+//is the recipe to be changed there?
+    const index = recipes.findIndex((recipe) => recipe.id == req.params.id);
+if(index == -1){
+    return res.status(404).json({
+        message:`${req.params.id} recipe not found`,
+    })
+}
+recipes[index]["name"] = payload.name;
+return res.send(recipes[index]);
 })
 
 
