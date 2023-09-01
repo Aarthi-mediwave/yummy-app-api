@@ -44,15 +44,28 @@ app.post('/recipes',(req,res) =>{
      return res.status(201).send(payload);
 })
 
+//delete the receipe
+app.delete('/recipes/:id',(req,res) =>{
+    const index = recipes.findIndex((recipe) => recipe.id == req.params.id);
+if(index == -1){
+    return res.status(404).json({
+        message:`${req.params.id} recipe not found`,
+    })
+}
+const deleteRecipe = recipes[index];
+recipes.splice(index, 1);
+    res.send(deleteRecipe);
+})
+
+
+
 app.use((req, res, next) => {
     return res.status(404).json({
         message:"Resource not found",
     })
 });
 
-app.delete('/',(req,res) =>{
-    res.send("DELETE request")
-})
+
 
 app.listen(PORT, (err) => {
     if(err){
